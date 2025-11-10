@@ -12,7 +12,9 @@ export default function App() {
   }
 
   function addTaskHandler() {
-    if (enteredTaskText.trim().length === 0) return;
+    if (enteredTaskText.trim().length === 0) {
+      return;
+    }
 
     setTasks((currentTasks) => [
       ...currentTasks,
@@ -22,12 +24,17 @@ export default function App() {
     setEnteredTaskText('');
   }
 
+  function deleteTaskHandler(id) {
+    setTasks((currentTasks) => {
+      return currentTasks.filter((task) => task.id !== id);
+    });
+  }
+
   return (
     <SafeAreaView style={styles.appContainer}>
       <View style={styles.contentContainer}>
         <Text style={styles.title}>Yapılacaklar Listem</Text>
 
-        {/* Input Section */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
@@ -38,12 +45,14 @@ export default function App() {
           <Button title="Ekle" onPress={addTaskHandler} />
         </View>
 
-        {/* List Section */}
         <FlatList
           data={tasks}
           keyExtractor={(item) => item.id}
           renderItem={(itemData) => (
-            <TodoItem text={itemData.item.text} />
+            <TodoItem
+              text={itemData.item.text}
+              onDelete={() => deleteTaskHandler(itemData.item.id)}
+            />
           )}
         />
       </View>
