@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TodoItem from './components/TodoItem';
 
@@ -7,10 +17,12 @@ export default function App() {
   const [enteredTaskText, setEnteredTaskText] = useState('');
   const [tasks, setTasks] = useState([]);
 
+  // Handle input changes
   function taskInputHandler(enteredText) {
     setEnteredTaskText(enteredText);
   }
 
+  // Add new task
   function addTaskHandler() {
     if (enteredTaskText.trim().length === 0) {
       return;
@@ -22,8 +34,10 @@ export default function App() {
     ]);
 
     setEnteredTaskText('');
+    Keyboard.dismiss(); // Close keyboard after adding
   }
 
+  // Delete a task
   function deleteTaskHandler(id) {
     setTasks((currentTasks) => {
       return currentTasks.filter((task) => task.id !== id);
@@ -32,7 +46,10 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.appContainer}>
-      <View style={styles.contentContainer}>
+      <KeyboardAvoidingView
+        style={styles.contentContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
         <Text style={styles.title}>Yapılacaklar Listem</Text>
 
         <View style={styles.inputContainer}>
@@ -45,17 +62,25 @@ export default function App() {
           <Button title="Ekle" onPress={addTaskHandler} />
         </View>
 
-        <FlatList
-          data={tasks}
-          keyExtractor={(item) => item.id}
-          renderItem={(itemData) => (
-            <TodoItem
-              text={itemData.item.text}
-              onDelete={() => deleteTaskHandler(itemData.item.id)}
-            />
-          )}
-        />
-      </View>
+        <View style={styles.listContainer}>
+          <FlatList
+            data={tasks}
+            renderItem={({ item }) => (
+              <TodoItem
+                text={item.text}
+                id={item.id}
+                onDelete={deleteTaskHandler}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+            ListEmptyComponent={
+              <Text style={styles.emptyText}>
+                Henüz görev yok. Bir tane ekle!
+              </Text>
+            }
+          />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -93,5 +118,14 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginRight: 10,
     fontSize: 16,
+  },
+  listContainer: {
+    flex: 5,
+  },
+  emptyText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#888',
   },
 });

@@ -1,15 +1,15 @@
-import { Text, View, StyleSheet, Pressable } from 'react-native';
+import { Text, StyleSheet, Pressable } from 'react-native';
 
-function TodoItem({ text, onDelete }) {
+function TodoItem({ text, id, onDelete }) {
   return (
-    <Pressable 
-      onPress={onDelete}
-      android_ripple={{ color: '#b3b3b3' }}
-      style={({ pressed }) => pressed && styles.pressedItem}
+    <Pressable
+      onPress={() => onDelete(id)}
+      style={({ pressed }) => [
+        styles.todoItem,
+        pressed && styles.pressedItem,
+      ]}
     >
-      <View style={styles.todoItem}>
-        <Text style={styles.todoText}>{text}</Text>
-      </View>
+      <Text style={styles.todoText}>{text}</Text>
     </Pressable>
   );
 }
@@ -30,5 +30,6 @@ const styles = StyleSheet.create({
   },
   pressedItem: {
     opacity: 0.5,
-  }
+    backgroundColor: '#dddddd',
+  },
 });
