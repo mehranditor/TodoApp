@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import TodoItem from './components/TodoItem';
 
 export default function App() {
-  
   const [enteredTaskText, setEnteredTaskText] = useState('');
- 
   const [tasks, setTasks] = useState([]);
 
   function taskInputHandler(enteredText) {
@@ -13,16 +12,14 @@ export default function App() {
   }
 
   function addTaskHandler() {
-    if (enteredTaskText.trim().length === 0) {
-      return;
-    }
+    if (enteredTaskText.trim().length === 0) return;
 
     setTasks((currentTasks) => [
       ...currentTasks,
       { id: Math.random().toString(), text: enteredTaskText },
     ]);
 
-    setEnteredTaskText(''); 
+    setEnteredTaskText('');
   }
 
   return (
@@ -30,7 +27,7 @@ export default function App() {
       <View style={styles.contentContainer}>
         <Text style={styles.title}>Yapılacaklar Listem</Text>
 
-        
+        {/* Input Section */}
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
@@ -41,7 +38,14 @@ export default function App() {
           <Button title="Ekle" onPress={addTaskHandler} />
         </View>
 
-        
+        {/* List Section */}
+        <FlatList
+          data={tasks}
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
+            <TodoItem text={itemData.item.text} />
+          )}
+        />
       </View>
     </SafeAreaView>
   );
