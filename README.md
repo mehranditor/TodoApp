@@ -18,8 +18,7 @@ Bu proje, **React Native** kullanılarak geliştirilmiş bir interaktif **Yapıl
 - Görev silme (Pressable ile tek tıklamada)
 - Klavyeyi kapatma ve KeyboardAvoidingView kullanımı
 - Boş liste durumunda bilgilendirici mesaj
-- Kullanıcı dostu ve temiz arayüz
-- Her görev için benzersiz ID
+
 
 ---
 
